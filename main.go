@@ -1,6 +1,7 @@
 package main
 
 import (
+	jirap "emacs-go/jira"
 	"emacs-go/util"
 	"fmt"
 	"gopkg.in/andygrunwald/go-jira.v1"
@@ -11,13 +12,7 @@ var creds = "atlassian_creds.json" // Stored in ~/.creds/
 func main() {
 	creds, _ := util.LoadPreferences(creds)
 
-	tp := jira.BasicAuthTransport{
-		Username: creds.Username,
-		Password: creds.Password,
-	}
-
-	client, err := jira.NewClient(tp.Client(), creds.Server)
-
+	client, err := jirap.GetClient(creds)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}
