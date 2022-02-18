@@ -3,46 +3,39 @@ package main
 import (
 	jirap "emacs-go/jira"
 	"emacs-go/util"
-	"fmt"
-	"gopkg.in/andygrunwald/go-jira.v1"
+	"log"
+	"os"
 )
 
-var creds = "atlassian_creds.json" // Stored in ~/.creds/
+var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
+var creds util.GHVars
 
 func main() {
-	creds, _ := util.LoadPreferences(creds)
-
-	client, err := jirap.GetClient(creds)
+	err := creds.LoadPreferences(creds_file)
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		log.Fatal(err)
+		os.Exit(1)
 	}
 
-	projlist, _, _ := client.Project.GetList()
+	ejira := jirap.EJIRA{Creds: creds}
 
-	var proj *jira.Project //jira.Project
-	for _, x := range *projlist {
-		if x.Name == "Data Architecture" {
-			fmt.Printf("%v\n", x)
-			id := x.ID
-			proj, _, _ = client.Project.Get(id)
-			break
-		}
-	}
+	proj, _ := ejira.GetProjectByName("Data Architecture")
 	print("%v", proj)
 
-	opts := jira.SearchOptions{
-		StartAt:    0,
-		MaxResults: 9999,
-		//Fields:     []string{"Assignee", "Created", "Due Date", "Issue Type", "Key", "Priority", "Reporter", "Status", "Summary"},
-	}
-	issues, _, _ := client.Issue.Search("project = DA AND status in (Backlog, Blocked, 'In Progress', 'In Review', Open) order by created DESC", &opts)
-	fmt.Printf("%v", issues)
+	/*
+		opts := jira.SearchOptions{
+			StartAt:    0,
+			MaxResults: 9999,
+			//Fields:     []string{"Assignee", "Created", "Due Date", "Issue Type", "Key", "Priority", "Reporter", "Status", "Summary"},
+		}
+		issues, _, _ := client.Issue.Search("project = DA AND status in (Backlog, Blocked, 'In Progress', 'In Review', Open) order by created DESC", &opts)
+		fmt.Printf("%v", issues)
 
-	fmt.Printf("%v\n", projlist)
-	// Works
-	u, _, _ := client.Issue.Get("DA-2", nil)
-	//client.Issue.cr
-	fmt.Printf("%v\n", u)
-	//fmt.Printf("\nEmail: %v\nSuccess!\n", u.EmailAddress)
-
+		fmt.Printf("%v\n", projlist)
+		// Works
+		u, _, _ := client.Issue.Get("DA-2", nil)
+		//client.Issue.cr
+		fmt.Printf("%v\n", u)
+		//fmt.Printf("\nEmail: %v\nSuccess!\n", u.EmailAddress)
+	*/
 }

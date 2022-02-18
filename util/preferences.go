@@ -14,18 +14,18 @@ type GHVars struct {
 	Server   string `json:"server"`
 }
 
-func LoadPreferences(creds string) (GHVars, error) {
+func (vars GHVars) LoadPreferences(creds string) error {
 	user, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
 	}
 	varsFile := fmt.Sprintf("%s/.creds/%s", user, creds)
 
-	var vars GHVars
+	//var vars GHVars
 	contents, err := ioutil.ReadFile(varsFile)
 	err = json.Unmarshal(contents, &vars)
 	if err != nil {
-		return vars, err
+		return err
 	}
-	return vars, err
+	return nil
 }

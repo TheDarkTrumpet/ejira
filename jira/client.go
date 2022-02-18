@@ -5,12 +5,17 @@ import (
 	"gopkg.in/andygrunwald/go-jira.v1"
 )
 
-func GetClient(creds util.GHVars) (client *jira.Client, err error) {
+type EJIRA struct {
+	Creds  util.GHVars
+	Client *jira.Client
+}
+
+func (ejira EJIRA) GetClient() (err error) {
 	tp := jira.BasicAuthTransport{
-		Username: creds.Username,
-		Password: creds.Password,
+		Username: ejira.Creds.Username,
+		Password: ejira.Creds.Password,
 	}
 
-	client, err = jira.NewClient(tp.Client(), creds.Server)
+	ejira.Client, err = jira.NewClient(tp.Client(), ejira.Creds.Server)
 	return
 }
