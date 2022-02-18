@@ -10,9 +10,7 @@ func (ejira EJIRA) getProjects() (jira.ProjectList, error) {
 }
 
 func (ejira EJIRA) GetProjectByName(name string) (*jira.Project, error) {
-	if ejira.Client == nil {
-		ejira.GetClient()
-	}
+	ejira.GetClient()
 
 	projlist, err := ejira.getProjects()
 

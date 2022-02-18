@@ -3,6 +3,7 @@ package main
 import (
 	jirap "emacs-go/jira"
 	"emacs-go/util"
+	"fmt"
 	"log"
 	"os"
 )
@@ -19,15 +20,13 @@ func main() {
 	ejira := jirap.EJIRA{Creds: creds}
 
 	proj, _ := ejira.GetProjectByName("Data Architecture")
-	print("%v", proj)
+	fmt.Printf("%v\n", proj.Name)
 
+	issues, _ := ejira.GetIssuesByProject(proj)
+
+	fmt.Printf("%v\n", issues)
 	/*
-		opts := jira.SearchOptions{
-			StartAt:    0,
-			MaxResults: 9999,
-			//Fields:     []string{"Assignee", "Created", "Due Date", "Issue Type", "Key", "Priority", "Reporter", "Status", "Summary"},
-		}
-		issues, _, _ := client.Issue.Search("project = DA AND status in (Backlog, Blocked, 'In Progress', 'In Review', Open) order by created DESC", &opts)
+
 		fmt.Printf("%v", issues)
 
 		fmt.Printf("%v\n", projlist)
