@@ -1,18 +1,15 @@
 package main
 
 import (
-	"encoding/json"
+	"emacs-go/util"
 	"fmt"
 	"gopkg.in/andygrunwald/go-jira.v1"
-	"io/ioutil"
-	"log"
-	"os"
 )
 
 var creds = "atlassian_creds.json" // Stored in ~/.creds/
 
 func main() {
-	creds, _ := loadVars()
+	creds, _ := util.LoadPreferences(creds)
 
 	tp := jira.BasicAuthTransport{
 		Username: creds.Username,
@@ -53,26 +50,4 @@ func main() {
 	fmt.Printf("%v\n", u)
 	//fmt.Printf("\nEmail: %v\nSuccess!\n", u.EmailAddress)
 
-}
-
-type GHVars struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Server   string `json:"server"`
-}
-
-func loadVars() (GHVars, error) {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
-	varsFile := fmt.Sprintf("%s/.creds/%s", user, creds)
-
-	var vars GHVars
-	contents, err := ioutil.ReadFile(varsFile)
-	err = json.Unmarshal(contents, &vars)
-	if err != nil {
-		return vars, err
-	}
-	return vars, err
 }
