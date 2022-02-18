@@ -37,9 +37,14 @@ func main() {
 		}
 	}
 	print("%v", proj)
-	for x := 0; x < len(*projlist); x++ {
 
+	opts := jira.SearchOptions{
+		StartAt:    0,
+		MaxResults: 9999,
+		//Fields:     []string{"Assignee", "Created", "Due Date", "Issue Type", "Key", "Priority", "Reporter", "Status", "Summary"},
 	}
+	issues, _, _ := client.Issue.Search("project = DA AND status in (Backlog, Blocked, 'In Progress', 'In Review', Open) order by created DESC", &opts)
+	fmt.Printf("%v", issues)
 
 	fmt.Printf("%v\n", projlist)
 	// Works
