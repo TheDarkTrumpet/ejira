@@ -25,6 +25,9 @@ func main() {
 	issues, _ := ejira.GetIssuesByProject(proj)
 
 	fmt.Printf("%v\n", issues)
+
+	i, _ := ejira.GetIssuebyID("DA-2")
+	fmt.Printf("%v\n", i.Fields.Assignee)
 	/*
 
 		fmt.Printf("%v", issues)

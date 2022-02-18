@@ -5,6 +5,13 @@ import (
 	"gopkg.in/andygrunwald/go-jira.v1"
 )
 
+func (ejira *EJIRA) GetIssuebyID(id string) (issue *jira.Issue, err error) {
+	ejira.GetClient()
+
+	issue, _, err = ejira.Client.Issue.Get(id, nil)
+	return
+}
+
 func (ejira *EJIRA) GetIssuesByProject(project *jira.Project) (issues []jira.Issue, err error) {
 	ejira.GetClient()
 	opts := jira.SearchOptions{
@@ -13,6 +20,5 @@ func (ejira *EJIRA) GetIssuesByProject(project *jira.Project) (issues []jira.Iss
 	}
 	jql := fmt.Sprintf("project = %s AND status in (Backlog, Blocked, 'In Progress', 'In Review', Open) order by created DESC", project.Key)
 	issues, _, err = ejira.Client.Issue.Search(jql, &opts)
-
 	return
 }
