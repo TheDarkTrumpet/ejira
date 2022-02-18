@@ -5,7 +5,7 @@ import (
 	"gopkg.in/andygrunwald/go-jira.v1"
 )
 
-func (ejira EJIRA) GetIssuesByProject(project *jira.Project) (issues []jira.Issue, err error) {
+func (ejira *EJIRA) GetIssuesByProject(project *jira.Project) (issues []jira.Issue, err error) {
 	ejira.GetClient()
 	opts := jira.SearchOptions{
 		StartAt:    0,

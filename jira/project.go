@@ -9,7 +9,7 @@ func (ejira EJIRA) getProjects() (jira.ProjectList, error) {
 	return *projlist, err
 }
 
-func (ejira EJIRA) GetProjectByName(name string) (*jira.Project, error) {
+func (ejira *EJIRA) GetProjectByName(name string) (*jira.Project, error) {
 	ejira.GetClient()
 
 	projlist, err := ejira.getProjects()
