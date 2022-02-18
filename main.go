@@ -8,10 +8,9 @@ import (
 )
 
 var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
-var creds util.GHVars
 
 func main() {
-	err := creds.LoadPreferences(creds_file)
+	creds, err := util.LoadPreferences(creds_file)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
