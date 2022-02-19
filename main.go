@@ -30,15 +30,7 @@ func main() {
 	flag.Parse()
 
 	if len(*operation) == 0 || len(*credsFile) == 0 {
-		fmt.Println("Usage: ejira -operation <operation_to_do>")
-		flag.PrintDefaults()
-		fmt.Println("---------------------------------------")
-		fmt.Println("---- Allowable Operations and Help ----")
-		fmt.Println("---------------------------------------")
-		for k, v := range allowableOperations {
-			fmt.Printf("%s   :   %v\n", k, v)
-		}
-		os.Exit(1)
+		PrintHelpAndExit()
 	}
 
 	creds, err := util.LoadPreferences(*credsFile)
@@ -47,27 +39,37 @@ func main() {
 		os.Exit(1)
 	}
 
-	ejira := jirap.EJIRA{Creds: creds}
+	// ejira := jirap.EJIRA{Creds: creds}
+	_ = jirap.EJIRA{Creds: creds}
 
-	proj, _ := ejira.GetProjectByName("Data Architecture")
-	fmt.Printf("%v\n", proj.Name)
-
-	issues, _ := ejira.GetIssuesByProject(proj)
-
-	fmt.Printf("%v\n", issues)
-
-	i, _ := ejira.GetIssuebyID("DA-2")
-	fmt.Printf("%v\n", i.Fields.Assignee)
+	if _, ok := allowableOperations[*operation]; !ok {
+		log.Fatal(fmt.Sprintf("The operation, %v, was not found!  Please see help below:", *operation))
+		PrintHelpAndExit()
+	} else {
+		fmt.Printf("Operating on: %v\n", *operation)
+	}
 }
 
-func OpenTasks() {
+func PrintHelpAndExit() {
+	fmt.Println("Usage: ejira -operation <operation_to_do>")
+	flag.PrintDefaults()
+	fmt.Println("---------------------------------------")
+	fmt.Println("---- Allowable Operations and Help ----")
+	fmt.Println("---------------------------------------")
+	for k, v := range allowableOperations {
+		fmt.Printf("%s   :   %v\n", k, v)
+	}
+	os.Exit(1)
+}
+
+func OpenTasks(_ string) {
 
 }
 
-func OpenProjectTasks() {
+func OpenProjectTasks(val string) {
 
 }
 
-func OrgJiraDetails() {
+func OrgJiraDetails(val string) {
 
 }
