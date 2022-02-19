@@ -9,23 +9,25 @@ import (
 	"os"
 )
 
-var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
+//var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
+var credsFile *string
 var operation *string
 
 func init() {
 	operation = flag.String("operation", "", "Operation to Perform")
+	credsFile = flag.String("creds", "atlassian_creds.json", "Creds file to load (default atlassian_creds.json)")
 }
 
 func main() {
 	flag.Parse()
 
-	if len(*operation) == 0 {
+	if len(*operation) == 0 || len(*credsFile) == 0 {
 		fmt.Println("Usage: ejira -operation <operation_to_do>")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
-	creds, err := util.LoadPreferences(creds_file)
+	creds, err := util.LoadPreferences(*credsFile)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
