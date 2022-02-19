@@ -7,16 +7,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"reflect"
 )
 
 //var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
 var credsFile *string
 var operation *string
-var value *string
+var Value *string
 
 func init() {
 	operation = flag.String("operation", "", "Operation to Perform")
-	value = flag.String("value", "", "The value tied to the operation, depends on the context")
+	Value = flag.String("value", "", "The value tied to the operation, depends on the context")
 	credsFile = flag.String("creds", "atlassian_creds.json", "Creds file to load (default atlassian_creds.json)")
 }
 
@@ -25,6 +26,8 @@ var allowableOperations = map[string]string{
 	"OpenProjectTasks": "Retrieve all open tasks in a project (defined by value flag)",
 	"OrgJiraDetails":   "Retrieve a formatted entry that can be inserted into org-mode, by task id (defined by value flag)",
 }
+
+type T struct{}
 
 func main() {
 	flag.Parse()
@@ -47,6 +50,12 @@ func main() {
 		PrintHelpAndExit()
 	} else {
 		fmt.Printf("Operating on: %v\n", *operation)
+		var t T
+		method := reflect.ValueOf(&t).MethodByName(*operation)
+		mcall := make([]reflect.Value, method.Type().NumIn())
+		mcall[0] = reflect.ValueOf(*Value)
+		output := method.Call(mcall)
+		fmt.Printf("output: %v\n", output)
 	}
 }
 
@@ -62,14 +71,20 @@ func PrintHelpAndExit() {
 	os.Exit(1)
 }
 
-func OpenTasks(_ string) {
+func (t *T) OpenTasks(_ string) string {
+	fmt.Println("In OpenTasks")
 
+	return "something, something"
 }
 
-func OpenProjectTasks(val string) {
+func (t *T) OpenProjectTasks(val string) string {
+	fmt.Println("In OpenProjectTasks")
 
+	return ""
 }
 
-func OrgJiraDetails(val string) {
+func (t *T) OrgJiraDetails(val string) string {
+	fmt.Println("In OrgJiraDetails")
 
+	return ""
 }
