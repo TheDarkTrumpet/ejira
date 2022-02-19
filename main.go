@@ -3,14 +3,28 @@ package main
 import (
 	jirap "emacs-go/jira"
 	"emacs-go/util"
+	"flag"
 	"fmt"
 	"log"
 	"os"
 )
 
 var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
+var operation *string
+
+func init() {
+	operation = flag.String("operation", "", "Operation to Perform")
+}
 
 func main() {
+	flag.Parse()
+
+	if len(*operation) == 0 {
+		fmt.Println("Usage: ejira -operation <operation_to_do>")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
 	creds, err := util.LoadPreferences(creds_file)
 	if err != nil {
 		log.Fatal(err)
