@@ -20,10 +20,10 @@ func init() {
 	credsFile = flag.String("creds", "atlassian_creds.json", "Creds file to load (default atlassian_creds.json)")
 }
 
-var allowableOperations = map[interface{}]string{
-	OpenTasks:        "Retrieve all open tasks assigned to the currently logged in user (value flag can be blank/null)",
-	OpenProjectTasks: "Retrieve all open tasks in a project (defined by value flag)",
-	OrgJiraDetails:   "Retrieve a formatted entry that can be inserted into org-mode, by task id (defined by value flag)",
+var allowableOperations = map[string]string{
+	"OpenTasks":        "Retrieve all open tasks assigned to the currently logged in user (value flag can be blank/null)",
+	"OpenProjectTasks": "Retrieve all open tasks in a project (defined by value flag)",
+	"OrgJiraDetails":   "Retrieve a formatted entry that can be inserted into org-mode, by task id (defined by value flag)",
 }
 
 func main() {
@@ -32,6 +32,12 @@ func main() {
 	if len(*operation) == 0 || len(*credsFile) == 0 {
 		fmt.Println("Usage: ejira -operation <operation_to_do>")
 		flag.PrintDefaults()
+		fmt.Println("---------------------------------------")
+		fmt.Println("---- Allowable Operations and Help ----")
+		fmt.Println("---------------------------------------")
+		for k, v := range allowableOperations {
+			fmt.Printf("%s   :   %v\n", k, v)
+		}
 		os.Exit(1)
 	}
 
