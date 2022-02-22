@@ -3,9 +3,11 @@ package template
 import (
 	"fmt"
 	"gopkg.in/andygrunwald/go-jira.v1"
+	"regexp"
 )
 
 func GetOrgDetails(issue *jira.Issue) string {
+	re := regexp.MustCompile("[[:^ascii:]]")
 	var comments string
 	assignee := "Unassigned"
 	reportedBy := "Unknown"
@@ -18,7 +20,7 @@ func GetOrgDetails(issue *jira.Issue) string {
 Date: %v
 Author: %v
 Comment: %v
------`, c.Created, c.Author.DisplayName, c.Body)
+-----`, c.Created, c.Author.DisplayName, re.ReplaceAllLiteralString(c.Body, ""))
 		}
 		comments += fmt.Sprintf("\n========= END COMMENTS =========\n#+end_quote\n")
 	}
@@ -37,7 +39,8 @@ Assigned To: %v
 Reported By: %v
 Status: %v
 Comments: %v`, issue.Key, issue.Fields.Summary,
-		issue.Fields.Description, assignee, reportedBy,
+		re.ReplaceAllLiteralString(issue.Fields.Description, ""),
+		assignee, reportedBy,
 		issue.Fields.Status.Name,
 		comments)
 
