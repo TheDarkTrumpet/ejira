@@ -36,11 +36,10 @@ Description: %v
 Assigned To: %v
 Reported By: %v
 Status: %v
-Opened:
-Due By:
 Comments: %v`, issue.Key, issue.Fields.Summary,
 		issue.Fields.Description, assignee, reportedBy,
-		issue.Fields.Status.Name, comments)
+		issue.Fields.Status.Name,
+		comments)
 
 	return text
 }
