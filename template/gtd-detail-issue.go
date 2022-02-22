@@ -8,6 +8,7 @@ import (
 func GetOrgDetails(issue *jira.Issue) string {
 	var comments string
 	assignee := "Unassigned"
+	reportedBy := "Unknown"
 
 	if issue.Fields.Comments != nil {
 		comments = fmt.Sprintf("\n#+begin_quote\n=========== COMMENTS ===========\n")
@@ -26,12 +27,19 @@ Comment: %v
 		assignee = issue.Fields.Assignee.DisplayName
 	}
 
-	text := fmt.Sprintf(`Issue: [[%v][%v]]
+	if issue.Fields.Reporter != nil {
+		reportedBy = issue.Fields.Reporter.DisplayName
+	}
+
+	text := fmt.Sprintf(`Issue: %v : %v
 Description: %v
 Assigned To: %v
+Reported By: %v
 Status: %v
-Comments: %v`, "Link", issue.Fields.Summary,
-		issue.Fields.Description, assignee,
+Opened:
+Due By:
+Comments: %v`, issue.Key, issue.Fields.Summary,
+		issue.Fields.Description, assignee, reportedBy,
 		issue.Fields.Status.Name, comments)
 
 	return text
