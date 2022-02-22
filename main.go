@@ -2,6 +2,7 @@ package main
 
 import (
 	jirap "emacs-go/jira"
+	"emacs-go/template"
 	"emacs-go/util"
 	"flag"
 	"fmt"
@@ -42,8 +43,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// ejira := jirap.EJIRA{Creds: creds}
-	_ = jirap.EJIRA{Creds: creds}
+	ejira := jirap.EJIRA{Creds: creds}
 
 	if _, ok := allowableOperations[*operation]; !ok {
 		log.Fatal(fmt.Sprintf("The operation, %v, was not found!  Please see help below:", *operation))
@@ -53,7 +53,8 @@ func main() {
 		var t T
 		method := reflect.ValueOf(&t).MethodByName(*operation)
 		mcall := make([]reflect.Value, method.Type().NumIn())
-		mcall[0] = reflect.ValueOf(*Value)
+		mcall[0] = reflect.ValueOf(&ejira)
+		mcall[1] = reflect.ValueOf(*Value)
 		output := method.Call(mcall)
 		fmt.Printf("output: %v\n", output)
 	}
@@ -71,20 +72,22 @@ func PrintHelpAndExit() {
 	os.Exit(1)
 }
 
-func (t *T) OpenTasks(_ string) string {
+func (t *T) OpenTasks(ejira jirap.EJIRA, _ string) string {
 	fmt.Println("In OpenTasks")
 
 	return "something, something"
 }
 
-func (t *T) OpenProjectTasks(val string) string {
+func (t *T) OpenProjectTasks(ejira jirap.EJIRA, val string) string {
 	fmt.Println("In OpenProjectTasks")
 
 	return ""
 }
 
-func (t *T) OrgJiraDetails(val string) string {
-	fmt.Println("In OrgJiraDetails")
+// OrgJiraDetails takes an issue ID, and returns an org-compatible block for the details section.
+func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) string {
+	issue, _ := ejira.GetIssuebyID(val)
 
-	return ""
+	orgDetails := template.GetOrgDetails(issue)
+	return orgDetails
 }
