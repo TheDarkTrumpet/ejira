@@ -22,3 +22,19 @@ func (ejira *EJIRA) GetIssuesByProject(project *jira.Project) (issues []jira.Iss
 	issues, _, err = ejira.Client.Issue.Search(jql, &opts)
 	return
 }
+
+func (ejira *EJIRA) PutCommentToIssue(id string) (err error) {
+	ejira.GetClient()
+
+	me, err := ejira.GetCurrentUser()
+	if err != nil {
+		return
+	}
+
+	var comment jira.Comment
+	comment.Name = "Test Author"
+	comment.Body = "Test Body"
+	comment.Author = *me
+	_, _, err = ejira.Client.Issue.AddComment(id, &comment)
+	return
+}

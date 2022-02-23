@@ -24,3 +24,9 @@ func (ejira *EJIRA) GetClient() (err error) {
 	ejira.Client = client
 	return
 }
+
+func (ejira *EJIRA) GetCurrentUser() (me *jira.User, err error) {
+	ejira.GetClient()
+	me, _, err = ejira.Client.User.GetSelf()
+	return
+}
