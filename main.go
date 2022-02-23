@@ -26,6 +26,7 @@ var allowableOperations = map[string]string{
 	"OpenTasks":        "Retrieve all open tasks assigned to the currently logged in user (value flag can be blank/null)",
 	"OpenProjectTasks": "Retrieve all open tasks in a project (defined by value flag)",
 	"OrgJiraDetails":   "Retrieve a formatted entry that can be inserted into org-mode, by task id (defined by value flag)",
+	"AddComment":       "Adds a comment to the task (defined by value flag)",
 }
 
 type T struct{}
@@ -90,4 +91,14 @@ func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) string {
 
 	orgDetails := template.GetOrgDetails(issue)
 	return orgDetails
+}
+
+// AddComment takes an issue ID, and adds a comment to it
+func (t *T) AddComment(ejira *jirap.EJIRA, val string) string {
+	err := ejira.PutCommentToIssue(val)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return ""
 }
