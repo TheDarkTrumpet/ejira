@@ -79,26 +79,34 @@ func (t *T) OpenTasks(ejira jirap.EJIRA, _ string) string {
 	return "something, something"
 }
 
-func (t *T) OpenProjectTasks(ejira jirap.EJIRA, val string) string {
-	fmt.Println("In OpenProjectTasks")
-
-	return ""
-}
-
-// OrgJiraDetails takes an issue ID, and returns an org-compatible block for the details section.
-func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) string {
-	issue, _ := ejira.GetIssuebyID(val)
-
-	orgDetails := template.GetOrgDetails(issue)
-	return orgDetails
-}
-
-// AddComment takes an issue ID, and adds a comment to it
-func (t *T) AddComment(ejira *jirap.EJIRA, val string) string {
-	err := ejira.PutCommentToIssue(val)
+func (t *T) OpenProjectTasks(ejira *jirap.EJIRA, val string) (temp string) {
+	temp, err := template.GetOpenTasksInProject(ejira, val)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	return ""
+
+	return
+}
+
+// OrgJiraDetails takes an issue ID, and returns an org-compatible block for the details section.
+func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) (orgDetails string) {
+	issue, err := ejira.GetIssuebyID(val)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	orgDetails = template.GetOrgDetails(issue)
+	return
+}
+
+// AddComment takes an issue ID, and adds a comment to it
+func (t *T) AddComment(ejira *jirap.EJIRA, val string) (err error) {
+	err = ejira.PutCommentToIssue(val)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return
 }
