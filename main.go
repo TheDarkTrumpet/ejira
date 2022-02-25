@@ -80,12 +80,19 @@ func (t *T) OpenTasks(ejira jirap.EJIRA, _ string) string {
 }
 
 func (t *T) OpenProjectTasks(ejira *jirap.EJIRA, val string) (temp string) {
-	temp, err := template.GetOpenTasksInProject(ejira, val)
-
+	proj, err := ejira.GetProjectByName(val)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
+	issues, err := ejira.GetIssuesByProject(proj)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	temp = template.GetOpenTasksInProject(issues)
 	return
 }
 
