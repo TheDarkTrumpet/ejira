@@ -20,7 +20,7 @@ func (ejira *EJIRA) GetProjectByName(name string) (*jira.Project, error) {
 
 	var proj *jira.Project
 	for _, x := range projlist {
-		if x.Name == name {
+		if x.Name == name || x.Key == name {
 			id := x.ID
 			proj, _, err = ejira.Client.Project.Get(id)
 			break

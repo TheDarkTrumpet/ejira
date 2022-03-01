@@ -86,6 +86,11 @@ func (t *T) OpenProjectTasks(ejira *jirap.EJIRA, val string) (temp string) {
 		return
 	}
 
+	if proj == nil {
+		log.Fatal(fmt.Sprintf("Unable to find a project by the name of %v", val))
+		return
+	}
+
 	issues, err := ejira.GetIssuesByProject(proj)
 	if err != nil {
 		log.Fatal(err)
