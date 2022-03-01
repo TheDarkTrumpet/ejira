@@ -73,10 +73,14 @@ func PrintHelpAndExit() {
 	os.Exit(1)
 }
 
-func (t *T) OpenTasks(ejira jirap.EJIRA, _ string) string {
-	fmt.Println("In OpenTasks")
-
-	return "something, something"
+func (t *T) OpenTasks(ejira *jirap.EJIRA, _ string) (temp string) {
+	issues, err := ejira.GetMyIssues()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	temp = template.GetOpenTasks(issues)
+	return
 }
 
 func (t *T) OpenProjectTasks(ejira *jirap.EJIRA, val string) (temp string) {
@@ -97,7 +101,7 @@ func (t *T) OpenProjectTasks(ejira *jirap.EJIRA, val string) (temp string) {
 		return
 	}
 
-	temp = template.GetOpenTasksInProject(issues)
+	temp = template.GetOpenTasksInProject(proj.Name, issues)
 	return
 }
 
