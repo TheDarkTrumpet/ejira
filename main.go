@@ -50,7 +50,6 @@ func main() {
 		log.Fatal(fmt.Sprintf("The operation, %v, was not found!  Please see help below:", *operation))
 		PrintHelpAndExit()
 	} else {
-		fmt.Printf("Operating on: %v\n", *operation)
 		var t T
 		method := reflect.ValueOf(&t).MethodByName(*operation)
 		mcall := make([]reflect.Value, method.Type().NumIn())
