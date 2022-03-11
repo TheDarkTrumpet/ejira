@@ -3,6 +3,7 @@ package jira
 import (
 	"fmt"
 	"gopkg.in/andygrunwald/go-jira.v1"
+	"io/ioutil"
 )
 
 func (ejira *EJIRA) GetIssuebyID(id string) (issue *jira.Issue, err error) {
@@ -39,6 +40,12 @@ func (ejira *EJIRA) GetIssuesByProject(project *jira.Project) (issues []jira.Iss
 func (ejira *EJIRA) PutCommentToIssue(id string, file string) (err error) {
 	ejira.GetClient()
 
+	fcontent, err := ioutil.ReadFile(file)
+
+	if err != nil {
+		return
+	}
+
 	me, err := ejira.GetCurrentUser()
 	if err != nil {
 		return
@@ -46,7 +53,7 @@ func (ejira *EJIRA) PutCommentToIssue(id string, file string) (err error) {
 
 	var comment jira.Comment
 
-	comment.Body = "Test Body"
+	comment.Body = string(fcontent)
 	comment.Author = *me
 	_, _, err = ejira.Client.Issue.AddComment(id, &comment)
 	return
