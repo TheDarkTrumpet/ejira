@@ -14,11 +14,13 @@ import (
 //var creds_file = "atlassian_creds.json" // Stored in ~/.creds/
 var credsFile *string
 var operation *string
-var Value *string
+var value *string
+var valueFile *string
 
 func init() {
 	operation = flag.String("operation", "", "Operation to Perform")
-	Value = flag.String("value", "", "The value tied to the operation, depends on the context")
+	value = flag.String("value", "", "The value tied to the operation, depends on the context")
+	valueFile = flag.String("vfile", "", "The path to the file that contains the value for operations (Mainly put operations)")
 	credsFile = flag.String("creds", "atlassian_creds.json", "Creds file to load (default atlassian_creds.json)")
 }
 
@@ -54,7 +56,7 @@ func main() {
 		method := reflect.ValueOf(&t).MethodByName(*operation)
 		mcall := make([]reflect.Value, method.Type().NumIn())
 		mcall[0] = reflect.ValueOf(&ejira)
-		mcall[1] = reflect.ValueOf(*Value)
+		mcall[1] = reflect.ValueOf(*value)
 		output := method.Call(mcall)
 		fmt.Printf("output: %v\n", output)
 	}
@@ -118,7 +120,7 @@ func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) (orgDetails string) {
 
 // AddComment takes an issue ID, and adds a comment to it
 func (t *T) AddComment(ejira *jirap.EJIRA, val string) (err error) {
-	err = ejira.PutCommentToIssue(val)
+	err = ejira.PutCommentToIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
 
 	if err != nil {
 		log.Fatal(err)
