@@ -29,6 +29,7 @@
     (org-paste-subtree)
     )
   (setq jlink (get-jira-id-from-buffer))
-  (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddComment --value %s --vfile %s" jlink file)))
+  (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddComment --value %s --vfile %s" jlink file))
+  (delete-file file))
 
 
