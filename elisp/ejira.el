@@ -6,13 +6,13 @@
    9 -2))
 
 (defun get-jira-id-from-buffer()
+  (goto-char (point-min))
   (re-search-forward "Link: .*?browse/\\(.*?\\)\]")
   (match-string-no-properties 1)
   )
 
 (defun update-jira-information ()
   (interactive)
-  (goto-char (point-min))
   (setq jlink (get-jira-id-from-buffer))
   (goto-char (point-min))
   (search-forward "* Jira Information")
@@ -27,5 +27,8 @@
   (setq file (make-temp-file "ejira.tmp"))
   (with-temp-file file
     (org-paste-subtree)
-  ))
+    )
+  (setq jlink (get-jira-id-from-buffer))
+  (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddComment --value %s --vfile %s" jlink file)))
+
 
