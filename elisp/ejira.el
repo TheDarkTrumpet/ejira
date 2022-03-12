@@ -32,4 +32,15 @@
   (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddComment --value %s --vfile %s" jlink file))
   (delete-file file))
 
+(defun put-to-jira-issue ()
+  (interactive)
+  (goto-char (point-min))
+  (set-mark-command nil)
+  (org-next-visible-heading 3)
+  (kill-ring-save (region-beginning) (region-end))
+  (setq file (make-temp-file "ejira.tmp"))
+  (with-temp-file file
+    (yank)
+    ))
+
 
