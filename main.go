@@ -29,6 +29,7 @@ var allowableOperations = map[string]string{
 	"OpenProjectTasks": "Retrieve all open tasks in a project (defined by value flag)",
 	"OrgJiraDetails":   "Retrieve a formatted entry that can be inserted into org-mode, by task id (defined by value flag)",
 	"AddComment":       "Adds a comment to the task (defined by value flag)",
+	"AddIssue":         "Creates a new issue based off the value (project), and temporary file as what to use as the body",
 }
 
 type T struct{}
@@ -121,6 +122,16 @@ func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) (orgDetails string) {
 // AddComment takes an issue ID, and adds a comment to it
 func (t *T) AddComment(ejira *jirap.EJIRA, val string) (err error) {
 	err = ejira.PutCommentToIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return
+}
+
+// AddIssue takes a project ID (or name), and adds an issue to it
+func (t *T) AddIssue(ejira *jirap.EJIRA, val string) (err error) {
+	err = ejira.AddIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
 
 	if err != nil {
 		log.Fatal(err)

@@ -34,6 +34,7 @@
 
 (defun put-to-jira-issue ()
   (interactive)
+  (setq project (read-string "Enter a Project ID (or name) to send this to: "))
   (goto-char (point-min))
   (set-mark-command nil)
   (org-next-visible-heading 3)
@@ -41,6 +42,8 @@
   (setq file (make-temp-file "ejira.tmp"))
   (with-temp-file file
     (yank)
-    ))
+    )
+  (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s" project file))
+  (delete-file file))
 
 

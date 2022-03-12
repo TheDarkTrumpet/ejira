@@ -59,3 +59,47 @@ func (ejira *EJIRA) PutCommentToIssue(id string, file string) (err error) {
 	_, _, err = ejira.Client.Issue.AddComment(id, &comment)
 	return
 }
+
+func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
+	ejira.GetClient()
+
+	fcontent, err := ioutil.ReadFile(file)
+
+	if err != nil {
+		return
+	}
+
+	me, err := ejira.GetCurrentUser()
+	if err != nil {
+		return
+	}
+
+	project, err := ejira.GetProjectByName(proj)
+	if err != nil {
+		return
+	}
+
+	var task jira.IssueType
+	for _, vl := range (project.IssueTypes) {
+		if vl.Name == "Task" {
+			task = vl
+		}
+	}
+
+	var issue jira.Issue
+	var iFields = jira.IssueFields{
+		Project:     *project,
+		Type:        task,
+		Description: fmt.Sprintf("{code:text}%s{code}", string(fcontent)),
+		Summary:     "Test Issue",
+		Creator:     me,
+		Reporter:    me,
+		Assignee:    me,
+	}
+	issue.Fields = &iFields
+	x, y, err := ejira.Client.Issue.Create(&issue)
+
+	fmt.Println(x)
+	fmt.Println(y)
+	return
+}
