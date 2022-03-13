@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/andygrunwald/go-jira.v1"
 	"io/ioutil"
+	"strings"
 )
 
 func (ejira *EJIRA) GetIssuebyID(id string) (issue *jira.Issue, err error) {
@@ -60,6 +61,21 @@ func (ejira *EJIRA) PutCommentToIssue(id string, file string) (err error) {
 	return
 }
 
+func getDescriptionSummary(file string) (summary string, description string) {
+	lines := strings.Split(file, "\n")
+
+	description = "{code:text}\n"
+	for i, line := range lines {
+		if i == 0 {
+			summary = strings.Replace(line, "* ", "", 1)
+		} else {
+			description += fmt.Sprintf("%s\n", line)
+		}
+	}
+	description += "{code}\n"
+	return
+}
+
 func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 	ejira.GetClient()
 
@@ -68,6 +84,8 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 	if err != nil {
 		return
 	}
+
+	summary, description := getDescriptionSummary(string(fcontent))
 
 	me, err := ejira.GetCurrentUser()
 	if err != nil {
@@ -81,8 +99,8 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 
 	issue := jira.Issue{
 		Fields: &jira.IssueFields{
-			Description: fmt.Sprintf("{code:text}%s{code}", string(fcontent)),
-			Summary:     "Test Issue",
+			Description: description,
+			Summary:     summary,
 			Project: jira.Project{
 				Key: project.Key,
 			},
@@ -92,6 +110,7 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 		},
 	}
 
+	return
 	basicIssue, _, err := ejira.Client.Issue.Create(&issue)
 	ejira.Client.Issue.UpdateAssignee(basicIssue.ID, me)
 

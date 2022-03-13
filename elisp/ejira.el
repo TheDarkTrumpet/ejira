@@ -37,13 +37,13 @@
   (setq project (read-string "Enter a Project ID (or name) to send this to: "))
   (goto-char (point-min))
   (set-mark-command nil)
-  (org-next-visible-heading 3)
+  (org-next-visible-heading 4)
   (kill-ring-save (region-beginning) (region-end))
   (setq file (make-temp-file "ejira.tmp"))
   (with-temp-file file
     (yank)
-    )
-  (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s" project file))
-  (delete-file file))
+    ))
+  ;(shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s" project file))
+  ;(delete-file file))
 
 
