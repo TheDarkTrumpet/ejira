@@ -42,8 +42,11 @@
   (setq file (make-temp-file "ejira.tmp"))
   (with-temp-file file
     (yank)
-    ))
-  ;(shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s" project file))
-  ;(delete-file file))
+    )
+  (setq issue (substring
+	       (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s 2>/dev/null" project file))
+	       0 -1))
+  (message "%s" issue)
+  (delete-file file))
 
 
