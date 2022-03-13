@@ -69,7 +69,7 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 		return
 	}
 
-	//me, err := ejira.GetCurrentUser()
+	me, err := ejira.GetCurrentUser()
 	if err != nil {
 		return
 	}
@@ -78,28 +78,6 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 	if err != nil {
 		return
 	}
-
-	/*
-		var task jira.IssueType
-		for _, vl := range (project.IssueTypes) {
-			if vl.Name == "Task" {
-				task = vl
-			}
-		}
-	*/
-	/*
-		var issue jira.Issue
-		var iFields = jira.IssueFields{
-			Project:     *project,
-			Type:        task,
-			Description: fmt.Sprintf("{code:text}%s{code}", string(fcontent)),
-			Summary:     "Test Issue",
-			Creator:     me,
-			Reporter:    me,
-			Assignee:    me,
-		}
-		issue.Fields = &iFields
-	*/
 
 	issue := jira.Issue{
 		Fields: &jira.IssueFields{
@@ -115,7 +93,8 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 	}
 
 	basicIssue, _, err := ejira.Client.Issue.Create(&issue)
+	ejira.Client.Issue.UpdateAssignee(basicIssue.ID, me)
 
-	fmt.Println(basicIssue)
+	fmt.Println(basicIssue.ID)
 	return
 }
