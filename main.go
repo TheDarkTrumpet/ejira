@@ -59,7 +59,7 @@ func main() {
 		mcall[0] = reflect.ValueOf(&ejira)
 		mcall[1] = reflect.ValueOf(*value)
 		output := method.Call(mcall)
-		fmt.Printf("output: %v\n", output)
+		fmt.Printf("%v", output[0])
 	}
 }
 
@@ -120,21 +120,23 @@ func (t *T) OrgJiraDetails(ejira *jirap.EJIRA, val string) (orgDetails string) {
 }
 
 // AddComment takes an issue ID, and adds a comment to it
-func (t *T) AddComment(ejira *jirap.EJIRA, val string) (err error) {
-	err = ejira.PutCommentToIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
+func (t *T) AddComment(ejira *jirap.EJIRA, val string) (result string) {
+	err := ejira.PutCommentToIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
 
 	if err != nil {
 		log.Fatal(err)
+		result = fmt.Sprintf("Error: %s", err) // So we can see this in emacs
 	}
 	return
 }
 
 // AddIssue takes a project ID (or name), and adds an issue to it
-func (t *T) AddIssue(ejira *jirap.EJIRA, val string) (err error) {
-	err = ejira.AddIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
+func (t *T) AddIssue(ejira *jirap.EJIRA, val string) (result string) {
+	result, err := ejira.AddIssue(val, *valueFile) // This kind of breaks my previous implementation pattern, may rethink this.
 
 	if err != nil {
 		log.Fatal(err)
+		result = fmt.Sprintf("Error: %s", err) // So we can see this in emacs
 	}
 	return
 }

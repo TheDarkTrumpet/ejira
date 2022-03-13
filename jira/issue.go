@@ -76,10 +76,10 @@ func getDescriptionSummary(file string) (summary string, description string) {
 	return
 }
 
-func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
+func (ejira *EJIRA) AddIssue(proj string, file string) (result string, err error) {
 	ejira.GetClient()
 
-	fmt.Println("DA-13")
+	result = "DA-13"
 	return
 	fcontent, err := ioutil.ReadFile(file)
 
