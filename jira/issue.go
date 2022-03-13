@@ -69,7 +69,7 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 		return
 	}
 
-	me, err := ejira.GetCurrentUser()
+	//me, err := ejira.GetCurrentUser()
 	if err != nil {
 		return
 	}
@@ -79,27 +79,43 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (err error) {
 		return
 	}
 
-	var task jira.IssueType
-	for _, vl := range (project.IssueTypes) {
-		if vl.Name == "Task" {
-			task = vl
+	/*
+		var task jira.IssueType
+		for _, vl := range (project.IssueTypes) {
+			if vl.Name == "Task" {
+				task = vl
+			}
 		}
+	*/
+	/*
+		var issue jira.Issue
+		var iFields = jira.IssueFields{
+			Project:     *project,
+			Type:        task,
+			Description: fmt.Sprintf("{code:text}%s{code}", string(fcontent)),
+			Summary:     "Test Issue",
+			Creator:     me,
+			Reporter:    me,
+			Assignee:    me,
+		}
+		issue.Fields = &iFields
+	*/
+
+	issue := jira.Issue{
+		Fields: &jira.IssueFields{
+			Description: fmt.Sprintf("{code:text}%s{code}", string(fcontent)),
+			Summary:     "Test Issue",
+			Project: jira.Project{
+				Key: project.Key,
+			},
+			Type: jira.IssueType{
+				Name: "Task",
+			},
+		},
 	}
 
-	var issue jira.Issue
-	var iFields = jira.IssueFields{
-		Project:     *project,
-		Type:        task,
-		Description: fmt.Sprintf("{code:text}%s{code}", string(fcontent)),
-		Summary:     "Test Issue",
-		Creator:     me,
-		Reporter:    me,
-		Assignee:    me,
-	}
-	issue.Fields = &iFields
-	x, y, err := ejira.Client.Issue.Create(&issue)
+	basicIssue, _, err := ejira.Client.Issue.Create(&issue)
 
-	fmt.Println(x)
-	fmt.Println(y)
+	fmt.Println(basicIssue)
 	return
 }
