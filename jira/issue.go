@@ -79,8 +79,6 @@ func getDescriptionSummary(file string) (summary string, description string) {
 func (ejira *EJIRA) AddIssue(proj string, file string) (result string, err error) {
 	ejira.GetClient()
 
-	result = "DA-13"
-	return
 	fcontent, err := ioutil.ReadFile(file)
 
 	if err != nil {
@@ -115,6 +113,7 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (result string, err error
 	basicIssue, _, err := ejira.Client.Issue.Create(&issue)
 	ejira.Client.Issue.UpdateAssignee(basicIssue.ID, me)
 
-	fmt.Println(basicIssue.ID)
+	result = basicIssue.ID
+
 	return
 }
