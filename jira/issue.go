@@ -113,7 +113,7 @@ func (ejira *EJIRA) AddIssue(proj string, file string) (result string, err error
 	basicIssue, _, err := ejira.Client.Issue.Create(&issue)
 	ejira.Client.Issue.UpdateAssignee(basicIssue.ID, me)
 
-	result = basicIssue.ID
+	result = basicIssue.Key
 
 	return
 }
