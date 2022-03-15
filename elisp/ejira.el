@@ -43,9 +43,9 @@
   (with-temp-file file
     (yank)
     )
-  (setq issue (substring
-	       (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s 2>/dev/null" project file))
-	       0 -1))
+  (setq issue
+	(shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddIssue --value %s --vfile %s 2>/dev/null" project file))
+	)
   (org-return)
   (previous-line)
   (ufg-add-jira-link-information issue)
