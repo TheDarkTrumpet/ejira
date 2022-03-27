@@ -23,7 +23,7 @@
 
 (defun put-day-to-jira-issue ()
   (interactive)
-  (org-copy-subtree 3)
+  (org-copy-subtree 1)
   (setq file (make-temp-file "ejira.tmp"))
   (with-temp-file file
     (org-paste-subtree)

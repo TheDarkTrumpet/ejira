@@ -33,13 +33,15 @@ Comment: %v
 		reportedBy = issue.Fields.Reporter.DisplayName
 	}
 
+	description := re.ReplaceAllLiteralString(issue.Fields.Description, "")
+
 	text := fmt.Sprintf(`Issue: %v : %v
 Description: %v
 Assigned To: %v
 Reported By: %v
 Status: %v
-Comments: %v`, issue.Key, issue.Fields.Summary,
-		re.ReplaceAllLiteralString(issue.Fields.Description, ""),
+Comments:%v`, issue.Key, issue.Fields.Summary,
+		description,
 		assignee, reportedBy,
 		issue.Fields.Status.Name,
 		comments)

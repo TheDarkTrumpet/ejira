@@ -64,15 +64,15 @@ func (ejira *EJIRA) PutCommentToIssue(id string, file string) (err error) {
 func getDescriptionSummary(file string) (summary string, description string) {
 	lines := strings.Split(file, "\n")
 
-	description = "{code:text}\n"
+	description = "{noformat}\n"
 	for i, line := range lines {
 		if i == 0 {
 			summary = strings.Replace(line, "* ", "", 1)
 		} else {
-			description += fmt.Sprintf("%s\n", line)
+			description += fmt.Sprintf(" %s\n", line)
 		}
 	}
-	description += "{code}\n"
+	description += "{NOFORMAT}\n"
 	return
 }
 
