@@ -28,9 +28,10 @@
   (with-temp-file file
     (org-paste-subtree)
     )
-  (setq jlink (get-jira-id-from-buffer))
-  (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddComment --value %s --vfile %s" jlink file))
-  (delete-file file))
+  (save-excursion
+    (setq jlink (get-jira-id-from-buffer))
+    (shell-command-to-string (format "/home/user/programming/personal/ejira/emacs-go --operation AddComment --value %s --vfile %s" jlink file))
+    (delete-file file)))
 
 (defun put-to-jira-issue ()
   (interactive)
