@@ -54,7 +54,7 @@ func (ejira *EJIRA) PutCommentToIssue(id string, file string) (err error) {
 
 	var comment jira.Comment
 
-	comment.Body = fmt.Sprintf("{code:text}%s{code}", string(fcontent))
+	comment.Body = fmt.Sprintf("{noformat}%s{noformat}", string(fcontent))
 
 	comment.Author = *me
 	_, _, err = ejira.Client.Issue.AddComment(id, &comment)
